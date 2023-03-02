@@ -8,6 +8,8 @@ const Dashboard = () => {
   const [users, setUsers] = useState();
   const [posts, setPosts] = useState();
 
+  console.log(users)
+
   const getCategory = async () => {
     const url = "http://localhost:5000/v1/categories";
     const resultPost = await ( await axiosAuth.get(url)).data
@@ -58,7 +60,6 @@ const Dashboard = () => {
           <p>{users?.totalResults}</p>
         </div>
         <div className="total-posts">
-          
           <div className="post">
             <h3>Total Category -</h3>
             <div className="icon"><FaBorderAll/></div>

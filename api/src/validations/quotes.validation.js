@@ -12,6 +12,9 @@ const getQuotess = {
   query: Joi.object().keys({
     quoteser: Joi.string(),
     quotes: Joi.string(),
+    page: Joi.number(),
+    limit: Joi.number(),
+
   }),
 };
 

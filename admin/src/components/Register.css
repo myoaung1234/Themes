@@ -27,10 +27,7 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   margin-left: 15rem;
-  padding: 60px 40px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  padding: 10px 40px;
   background-color: white;
 }
 

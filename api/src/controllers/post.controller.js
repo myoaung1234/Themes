@@ -2,24 +2,24 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { postService } = require('../services');
+const { postService, categoryService } = require('../services');
 
 
 const createPost = catchAsync(async (req, res) => {
   let formData = req.body
   formData.userId = req.user._id
   const post = await postService.createPost(formData);
+  await categoryService.updateNumberOfPosts(formData.category)
   res.status(httpStatus.CREATED).send(post);
 });
 
 const getPosts= catchAsync(async (req, res) => {
   const filter = pick(req.query, ['title', 'role']);
   let options = pick(req.query, ['sortBy', 'limit', 'page']);
+  options.populate = 'category'
   const result = await postService.queryPosts(filter, options);
-  const data = result;
-  res.send(data);
+  res.send(result);
 });
-
 
 const getPost = catchAsync(async (req, res) => {
   const post = await postService.getPostById(req.params.postId);
@@ -31,13 +31,20 @@ const getPost = catchAsync(async (req, res) => {
 
 const updatePost = catchAsync(async (req, res) => {
   const post = await postService.updatePostById(req.params.postId, req.body);
+  await categoryService.updateNumberOfPosts(req.body.category)
   res.send(post);
 });
 
 const deletePost = catchAsync(async (req, res) => {
+  const post = await postService.getPostById(req.params.postId);
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found !!');
+  }
   await postService.deletePostById(req.params.postId);
+  await categoryService.updateNumberOfPosts(post.category)
   res.status(httpStatus.NO_CONTENT).send();
 });
+
 
 
 module.exports = {
@@ -45,5 +52,5 @@ module.exports = {
   getPosts,
   getPost,
   updatePost,
-  deletePost,
+  deletePost
  };

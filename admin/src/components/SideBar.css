@@ -1,10 +1,10 @@
 
 .sidebar {
     width: 300px;
+    height: 110vh;
     background-color: #000;
     color: #fff;
-    height: 100vh;
-    
+    position: sticky;
 }
 
 .top-section {
@@ -43,4 +43,25 @@
 
 .icon, .link-text {
     font-size: 20px;
+}
+
+.logout {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-left: 5px;
+    margin-top: 20px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background-color: red;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: 0.5s;
+    border: none;
+}
+
+.logout:hover{
+    gap: 1rem;
 }

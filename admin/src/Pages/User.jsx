@@ -3,40 +3,33 @@ import './User.css'
 import { HiUsers } from 'react-icons/hi'
 import { BiChevronsRight } from 'react-icons/bi'
 import { axiosAuth } from '../config/axios'
-import Pagination from '../pagination/pagination'
+import { format } from 'timeago.js';
 
 const User = () => {
   const [users, setUsers] = useState();
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(4);
+  const [page, setPage] = useState(1);
 
+  const getUsers = async () => {
+    const url = `http://localhost:5000/v1/users?page=${page}&limit=4`;
+    const resultUsers = await ( await axiosAuth.get(url)).data
+    setUsers(resultUsers);
+    setPage(resultUsers?.page) 
+  }
+
+  const handleNext = () => {
+    setPage(page + 1)
+  }
+
+  const handlePrev = () => {
+    setPage(page - 1)
+  }
 
   useEffect(() => {
-    const url = "http://localhost:5000/v1/users";
-    const getUsers = async () => {
-      setLoading(true)
-      const resultUsers = await ( await axiosAuth.get(url)).data
-      setUsers(resultUsers);
-      setLoading(false)
-    }
-    
     getUsers();
-  }, []);
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentUsers = users?.results?.slice(indexOfFirstPost, indexOfLastPost);
-
-  const paginate = pageNumber => setCurrentPage(pageNumber);
-
-  if(loading) {
-    return <h2>Loading ...</h2>
-  }
+  }, [page]);
 
   return (
     <div className='user-container'>
-      
       <div className="posts-header">
         <div className="header-left">
           <div className="user-header">
@@ -63,24 +56,23 @@ const User = () => {
             </thead>
             <tbody>
               {
-                currentUsers?.map((data, i) => (
+                users?.results?.map((data, i) => (
                   <tr key={i}>
-                  <td>{ i + 1}</td>
+                  <td>{(data.id).slice(0, 8)}...</td>
                   <td>{data.name}</td>
                   <td>{data.email}</td>
-                  <td>31.1.2023</td>
-                  <td>40</td>
+                  <td>{format(data.createdAt)}</td>
+                  <td>{14}</td>
                 </tr>
                 ))
               }
               
               </tbody>
           </table>
-          <Pagination 
-            postsPerPage={postsPerPage}
-            totalPosts={users?.totalResults}
-            paginate={paginate}
-          />
+          <div className="pagi">
+            <button disabled={1 >= page} onClick={() => handlePrev()}>Prev</button>
+            <button disabled={users?.totalPages <= page} onClick={() => handleNext()}>Next</button>
+          </div>
         </div>
     </div>
   )

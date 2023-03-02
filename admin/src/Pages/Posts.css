@@ -9,7 +9,6 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    
 }
 
 .header-left {
@@ -67,11 +66,6 @@
 .add-new i {
     font-size: 20px;
     font-weight: 600;
-}
-
-.posts-list {
-    
-    margin-top: 40px;
 }
 
 table {
@@ -138,6 +132,23 @@ tr .action {
     background-color: #000;
     color: #fff;
     border-radius: 8px;
+}
+
+.pagi {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    gap: 1rem;
+}
+
+.pagi button {
+    border: 1px solid #333;
+    outline: none;
+    padding: 8px 10px;
+    background-color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
 }
 
 

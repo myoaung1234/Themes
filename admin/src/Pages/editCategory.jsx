@@ -1,7 +1,6 @@
 
 import './AddNew.css'
 import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { BiChevronsRight } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,7 +14,7 @@ const EditCategory = () => {
     const getCategory = async (id) => {
       const url = `http://localhost:5000/v1/categories/${id}`;
       const getData = await ( await axiosAuth.get(url)).data;
-      setCategory(getData);
+      setCategory({name: getData.name});
     }
 
     const { id } = useParams();

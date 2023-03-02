@@ -1,6 +1,6 @@
 import axios from "axios"
 
-let data = localStorage.getItem('data') ?  JSON.parse(localStorage.getItem('data')) : {};
+let data = localStorage.getItem('user') ?  JSON.parse(localStorage.getItem('user')) : {};
 
 
 export let axiosAuth = axios.create({

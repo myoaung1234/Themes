@@ -18,10 +18,16 @@ const EditPost = () => {
     category: '', 
     image: ''});
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    const base64 = await convertToBase64(file);
-    setPost({...post, image: base64})
+  const onUpload = (files) => {
+    const formData = new FormData();
+    formData.append('file', files[0]);
+    formData.append('upload_preset', 'zzpdfloq');
+    axios.post(
+      'https://api.cloudinary.com/v1_1/dttk6eaz9/image/upload', 
+      formData)
+      .then((response) => {
+        setImage(response.data.secure_url)
+      })
   }
 
     const getCategory = async () => {
@@ -33,7 +39,13 @@ const EditPost = () => {
     const getPost = async (id) => {
       const url = `http://localhost:5000/v1/posts/${id}`;
       const getData = await ( await axiosAuth.get(url)).data;
-      setPost(getData);
+      setPost({
+        title: getData.title, 
+        image: getData.image, 
+        desc: getData.desc, 
+        category: getData.category, 
+        summary: getData.summary
+      });
     }
 
     const { id } = useParams();
@@ -80,7 +92,7 @@ const EditPost = () => {
                   name="myFile"
                   id='file-upload'
                   accept='.jpeg, .png, .jpg'
-                  onChange={(e) => handleFileUpload(e)}
+                  onChange={(e) => onUpload(e.target.files)}
                 />
             </div>
 
@@ -119,16 +131,3 @@ const EditPost = () => {
 }
 
 export default EditPost
-
-function convertToBase64(file){
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        resolve(fileReader.result)
-      };
-      fileReader.onerror = (error) => {
-        reject(error)
-      }
-    })
-  }

@@ -11,6 +11,8 @@ const createCategory = {
 const getCategories = {
   query: Joi.object().keys({
     name: Joi.string(),
+    page: Joi.number(),
+    limit: Joi.number()
   }),
 };
 

@@ -5,8 +5,6 @@
     align-items: flex-start;
     justify-content: flex-end;
     background-color: #333;
-    
-    
 }
 
 .header-inner {
@@ -32,10 +30,6 @@
     margin-bottom: 20px;
     cursor: pointer;
     transition: all 0.5s;
-}
-
-.logout {
-    color: rgb(206, 24, 24);
 }
 
 

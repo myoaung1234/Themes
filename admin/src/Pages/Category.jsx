@@ -3,38 +3,33 @@ import { BiChevronsRight, BiImageAdd } from 'react-icons/bi'
 import { MdDelete } from 'react-icons/md'
 import { FiEdit } from 'react-icons/fi'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios';
 import { axiosAuth } from '../config/axios'
-import Pagination from '../pagination/pagination'
-
-
-
 
 const Category = () => {
   const navigate = useNavigate()
   const [category, setCategory] = useState();
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(4);
+  const [page, setPage] = useState(1);
 
-  const url = "http://localhost:5000/v1/categories";
-  const getCategories = async (e) => {
-    setLoading(true)
+  const getCategories = async () => {
+    const url = `http://localhost:5000/v1/categories?page=${page}&limit=4`;
     const resultCategories = await ( await axiosAuth.get(url)).data
     setCategory(resultCategories);
-    setLoading(false)
+    setPage(resultCategories?.page)
+  }
+
+  const handleNext = () => {
+    setPage(page + 1)
+  }
+
+  const handlePrev = () => {
+    setPage(page - 1)
   }
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [page]);
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentCategories = category?.results?.slice(indexOfFirstPost, indexOfLastPost);
-
-  const paginate = pageNumber => setCurrentPage(pageNumber);
-
+  
    //handle Delete Function
     const handleDelete = async (id) =>{
       alert("Are you sure to Delete")
@@ -42,9 +37,6 @@ const Category = () => {
       getCategories()
     }
 
-    if(loading) {
-      return <h2>Loading ...</h2>
-    }
   
   return (
     <div className='posts'>
@@ -69,11 +61,11 @@ const Category = () => {
           </thead>
           <tbody>
           {
-            currentCategories?.map((data, i) => (
+            category?.results?.map((data, i) => (
               <tr key={i}>
-                <td>{i + 1}</td>
+                <td>{(data.id).slice(0, 8)}...</td>
                 <td>{data.name}</td>
-                <td>5</td>
+                <td>{data.numberOfPosts}</td>
                 <td className='action'>
                   <p className='edit' onClick={() => navigate(`/admin/category/${data.id}`)}><FiEdit /></p>
                   <p className='delete' onClick={() => handleDelete (data.id)}><MdDelete /></p>
@@ -83,11 +75,10 @@ const Category = () => {
           }
           </tbody>
         </table>
-        <Pagination 
-          postsPerPage={postsPerPage}
-          totalPosts={category?.totalResults}
-          paginate={paginate}
-        />
+        <div className="pagi">
+          <button disabled={1 >= page} onClick={() => handlePrev()}>Prev</button>
+          <button disabled={category?.totalPages <= page} onClick={() => handleNext()}>Next</button>
+        </div>
       </div>
     </div>
   )

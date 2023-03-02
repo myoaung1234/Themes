@@ -5,9 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
-
-  let data = localStorage.getItem('data') ?  JSON.parse(localStorage.getItem('data')) : {};
-
+  let data = localStorage.getItem('user') ?  JSON.parse(localStorage.getItem('user')) : {};
   let name = data?.user?.name ? data?.user?.name : 'Admin';
   let image = data?.user?.image
 

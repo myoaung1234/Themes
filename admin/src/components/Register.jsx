@@ -4,6 +4,7 @@ import './Register.css'
 import avatar from '../assets/profile.png'
 import { axiosAuth } from '../config/axios';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,10 +14,16 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [ repeatPass, setRepeatPass] = useState('');
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    const base64 = await convertToBase64(file);
-    setImage(base64)
+  const onUpload = (files) => {
+    const formData = new FormData();
+    formData.append('file', files[0]);
+    formData.append('upload_preset', 'zzpdfloq');
+    axios.post(
+      'https://api.cloudinary.com/v1_1/dttk6eaz9/image/upload', 
+      formData)
+      .then((response) => {
+        setImage(response.data.secure_url)
+      })
   }
 
   const handleSubmite = async (e) => {
@@ -48,7 +55,7 @@ const Register = () => {
             name="myFile"
             id='file-upload'
             accept='.jpeg, .png, .jpg'
-            onChange={(e) => handleFileUpload(e)}
+            onChange={(e) => onUpload(e.target.files)}
           />
         </div>
 
@@ -77,16 +84,3 @@ const Register = () => {
 
 export default Register
 
-
-function convertToBase64(file){
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        resolve(fileReader.result)
-      };
-      fileReader.onerror = (error) => {
-        reject(error)
-      }
-    })
-  }

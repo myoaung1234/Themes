@@ -5,30 +5,39 @@ import { MdDelete } from 'react-icons/md'
 import { FiEdit } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { axiosAuth } from '../config/axios'
+import { format } from 'timeago.js';
 
 const Posts = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('')
   
-  const getPosts = async (pageNum) => {
-    const url = `http://localhost:5000/v1/posts?page=${pageNum}&limit=4`;
+  const getPosts = async () => {
+    let url = `http://localhost:5000/v1/posts?page=${page}&limit=4`
+    if(search) {
+      url += `&title=${search}`
+    };
     const resultPost = await ( await axiosAuth.get(url)).data
     setPage(resultPost?.page)
     setPosts(resultPost);
   }
 
+  const searchPosts = (e) => {
+    setSearch(e.target.value)
+  }
+
   const handleNext = () => {
-    getPosts(page + 1)
+    setPage(page + 1)
   }
 
   const handlePrev = () => {
-    getPosts(page - 1)
+    setPage(page - 1)
   }
 
   useEffect(() => {
-    getPosts(page);
-  }, []);
+    getPosts();
+  }, [page, search]);
 
    //handle Delete Function 
     const handleDelete = async (id) =>{
@@ -37,14 +46,13 @@ const Posts = () => {
         getPosts()
     }
 
-   
   return (
     <div className='posts'>
       <div className="posts-header">
         <div className="header-left">
           <h2>Manage News</h2>
           <p>Dashboard<BiChevronsRight /><span>Manage News</span></p>
-          <input type="text" placeholder='Search...' />
+          <input type="text" placeholder='Search...' onChange={searchPosts}  />
         </div>
         <div className='add-new' onClick={() => {
           navigate('/admin/posts/add-new-post')
@@ -65,10 +73,10 @@ const Posts = () => {
           {
             posts?.results?.map((data, i) => (
               <tr key={i}>
-                <td>{i + 1}</td>
+                <td>{(data.id).slice(0, 8)}...</td>
                 <td>{data.title}</td>
-                <td>{data.category}</td>
-                <td>{}</td>
+                <td>{data?.category?.name}</td>
+                <td>{format(data.createdAt)}</td>
                 <td className='action'>
                   <p className='edit' onClick={() => navigate(`/admin/posts/${data.id}`)}><FiEdit /></p>
                   <p className='delete' onClick={() => handleDelete (data.id)}><MdDelete /></p>
@@ -78,10 +86,10 @@ const Posts = () => {
           }
           </tbody>
         </table>
-
-        <button disabled={1 >= page} onClick={() => handlePrev()}>Prev</button>
-        <button disabled={posts?.totalPages <= page} onClick={() => handleNext()}>Next</button>
-        
+        <div className="pagi">
+          <button disabled={1 >= page} onClick={() => handlePrev()}>Prev</button>
+          <button disabled={posts?.totalPages <= page} onClick={() => handleNext()}>Next</button>
+        </div>
       </div>
     </div>
   )

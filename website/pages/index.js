@@ -8,11 +8,25 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 
 
 export default function Home() {
+  const [posts, setPosts] = useState()
+
+  const getPosts = async () => {
+    let url = `http://localhost:5000/v1/posts?page=1&limit=4`
+    const resultPost = await ( await axios.get(url)).data
+    setPosts(resultPost);
+  }
+
+  useEffect(() => {
+    getPosts()
+  }, [])
+
+  console.log(posts?.results)
+
   
   return (
     <>
@@ -49,17 +63,6 @@ export default function Home() {
 
               <div className="picked-right">
                 <div className="right-inner-column">
-
-                  <div className="picked-right-inner">
-                    <div className="rate"><span>8.7</span></div>
-                    <div className="picked-right-image">
-                      <img src="https://images.pexels.com/photos/13199304/pexels-photo-13199304.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" />
-                    </div>
-                    <div className="picked-right-text">
-                      <span className="style">STYLE</span>
-                      <a href="/posts/post">Lorem ipsum dolor sit amet consec Iste, unde?</a>
-                    </div>
-                  </div>
 
                   <div className="picked-right-inner">
                     <div className="picked-right-image">
@@ -110,7 +113,7 @@ export default function Home() {
 
               <div className="picked-right">
                 <div className="right-inner-column">
-
+                  
                   <div className="picked-right-inner">
                     <div className="rate"><span>8.7</span></div>
                     <div className="picked-right-image">

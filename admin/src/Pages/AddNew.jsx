@@ -6,7 +6,7 @@ import { BiChevronsRight } from 'react-icons/bi'
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { axiosAuth } from '../config/axios';
-import axios from 'axios';
+import axios  from 'axios';
 
 const AddNew = () => {
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ const AddNew = () => {
   const [category, setCategory] = useState('')
   const [desc, setDesc] = useState('');
   const [categories, setCategories] = useState();
-  const [add, setAdd] = useState(true);
   const [loading, setLoading] = useState(true)
   
   const onUpload = (files) => {
@@ -54,12 +53,17 @@ const AddNew = () => {
     }
     e.preventDefault();
     try {
+      setLoading(false)
       const res = await (await axiosAuth.post(url, Credentials)).data
-      setAdd(false)
+      setLoading(true)
       navigate('/admin/posts')
     } catch (error) {
       console.log(error)
     }
+  }
+
+  if(!loading) {
+    return <h1>Loading...</h1>
   }
 
   return (
@@ -76,7 +80,6 @@ const AddNew = () => {
             <div className='product-form-control'>
                 <label className='username'>Title*</label>
                 <input type="text" onChange={(e) => setTitle(e.target.value)} required />
-                
             </div>
             <div className="product-form-control">
               <p>Image*</p>
@@ -117,7 +120,11 @@ const AddNew = () => {
 
             <div className='product-btn-control'>
               <a href="/admin/posts">Back To</a>
-              <button type='submit' className='new-product-btn' onSubmit={(e) => handleSubmite(e)} >Add New Post</button>
+              <button type='submit' 
+                className='new-product-btn' 
+                onSubmit={(e) => handleSubmite(e)} 
+                disabled={!loading}
+              >Add New Post</button>
             </div>
         
         </form>
