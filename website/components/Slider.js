@@ -1,11 +1,25 @@
-import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, {Autoplay} from 'swiper';
 import 'swiper/css';
-
+import axios from 'axios'
+import React, { useState, useEffect} from 'react'
+import { format } from 'timeago.js'
+import Link from 'next/link';
 
 const Slider = () => {
   SwiperCore.use([Autoplay])
+  const [posts, setPosts] = useState()
+  
+
+  const getPosts = async () => {
+    let url = `http://localhost:5000/v1/posts/public/webPosts/?sortBy=createdAt:desc`
+    const resultPost = await ( await axios.get(url)).data
+    setPosts(resultPost);
+  }
+
+  useEffect(() => {
+    getPosts()
+  }, [])
   return (
     <>
         <div className="slider-container">
@@ -13,61 +27,26 @@ const Slider = () => {
             slidesPerView={3}
             loop={true}
             autoplay={{
-              delay: 2000
+              delay: 3000
             }}
           >
-            <SwiperSlide>
-              <div className="slider">
-                <div className="slider-image">
-                  <div className="slider-image-wrapper">
-                    <img src="https://images.pexels.com/photos/12349053/pexels-photo-12349053.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                  </div>
-                </div>
-                <div className="slider-title">
-                  <a href="/posts/post">Headsets are better if you're playing</a>
-                  <span>5 MONTHS AGO</span>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="slider">
-                <div className="slider-image">
-                  <div className="slider-image-wrapper">
-                    <img src="https://images.pexels.com/photos/9125018/pexels-photo-9125018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                  </div>
-                </div>
-                <div className="slider-title">
-                  <a href="/posts/post">Headsets are better if you're playing</a>
-                  <span>5 MONTHS AGO</span>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-                <div className="slider">
-                  <div className="slider-image">
-                    <div className="slider-image-wrapper">
-                      <img src="https://images.pexels.com/photos/12337034/pexels-photo-12337034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
+            {
+              posts?.results?.map((data, i) => (
+                <SwiperSlide key={i}>
+                  <div className="slider">
+                    <div className="slider-image">
+                      <div className="slider-image-wrapper">
+                        <img src={data.image} alt=""/>
+                      </div>
+                    </div>
+                    <div className="slider-title">
+                      <Link href={`/posts/${data.id}`}>{data.title}</Link>
+                      <span>{format(data.createdAt)}</span>
                     </div>
                   </div>
-                  <div className="slider-title">
-                    <a href="/posts/post">Headsets are better if you're playing</a>
-                    <span>5 MONTHS AGO</span>
-                  </div>
-                </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="slider">
-                <div className="slider-image">
-                  <div className="slider-image-wrapper">
-                    <img src="https://images.pexels.com/photos/9125018/pexels-photo-9125018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                  </div>
-                </div>
-                <div className="slider-title">
-                  <a href="/posts/post">Headsets are better if you're playing</a>
-                  <span>5 MONTHS AGO</span>
-                </div>
-              </div>
-            </SwiperSlide>
+                </SwiperSlide>
+              ))
+            }
           </Swiper>
         </div>
     </>

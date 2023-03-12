@@ -78,6 +78,7 @@ const updateNumberOfPosts = async (categoryId) => {
   return category;
 };
 
+
 module.exports = {
   createCategory,
   queryCategories,

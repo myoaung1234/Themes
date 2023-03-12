@@ -6,7 +6,7 @@ const Header = () => {
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   let dateObj = new Date();
-  let month = monthNames[dateObj.getUTCMonth()]; //months from 1-12
+  let month = monthNames[dateObj.getUTCMonth()]; 
   let day = dateObj.getUTCDate()
   let year = dateObj.getUTCFullYear();
   return (
@@ -15,8 +15,6 @@ const Header = () => {
           <div className="header-left">
             <h2><span>Themes</span> Celebrity</h2>
             <a href="/" className='link'>Home</a>
-            <a href="#" className='link'>Reviews</a>
-            <a href="#" className='link'>News</a>
           </div>
           <div className="header-right">
             <div className="search">

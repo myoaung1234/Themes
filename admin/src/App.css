@@ -54,3 +54,11 @@ button:disabled{
   background-color: #0071c28c;
   cursor: not-allowed;
 }
+
+.loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}

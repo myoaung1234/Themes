@@ -26,14 +26,13 @@ const queryPosts = async (filter, options) => {
 };
 
 
-
 /**
  * Get post by id
  * @param {ObjectId} id
  * @returns {Promise<Post>}
  */
 const getPostById = async (id) => {
-  return Post.findById(id);
+  return Post.findById(id).populate('category').populate('userId');
 };
 
 /**
@@ -66,8 +65,6 @@ const deletePostById = async (postId) => {
   await post.remove();
   return post;
 };
-
-
 
 
 module.exports = {

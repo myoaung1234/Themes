@@ -18,13 +18,14 @@ const postSchema = mongoose.Schema(
       required: true
     },
 
-    user: {
+    userId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
+      required: true
     },
     viewCount: {
-      type: String,
-      default: 1,
+      type: Number,
+      default: 0,
     },
     summary: {
       type: String,

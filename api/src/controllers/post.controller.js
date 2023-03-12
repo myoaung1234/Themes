@@ -7,6 +7,7 @@ const { postService, categoryService } = require('../services');
 
 const createPost = catchAsync(async (req, res) => {
   let formData = req.body
+  formData.desc = req.EditorJsBody
   formData.userId = req.user._id
   const post = await postService.createPost(formData);
   await categoryService.updateNumberOfPosts(formData.category)
@@ -14,9 +15,9 @@ const createPost = catchAsync(async (req, res) => {
 });
 
 const getPosts= catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['title', 'role']);
+  const filter = pick(req.query, ['title', 'category']);
   let options = pick(req.query, ['sortBy', 'limit', 'page']);
-  options.populate = 'category'
+  options.populate = 'category, userId'
   const result = await postService.queryPosts(filter, options);
   res.send(result);
 });
@@ -26,7 +27,8 @@ const getPost = catchAsync(async (req, res) => {
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found !!');
   }
-  res.send(post);
+  const update = await postService.updatePostById(req.params.postId, {viewCount: post.viewCount + 1});
+  res.send(update);
 });
 
 const updatePost = catchAsync(async (req, res) => {
@@ -44,7 +46,6 @@ const deletePost = catchAsync(async (req, res) => {
   await categoryService.updateNumberOfPosts(post.category)
   res.status(httpStatus.NO_CONTENT).send();
 });
-
 
 
 module.exports = {

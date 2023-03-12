@@ -19,4 +19,9 @@ router
   .patch(auth('manageQuotes'),validate(quotesValidation.updateQuotes), quotesController.updateQuotes)
   .delete(auth('manageQuotes'),validate(quotesValidation.deleteQuotes), quotesController.deleteQuotes)
 
+  router
+  .route('/public/webQuotess')
+  .get(quotesController.getQuotess);
+
+
 module.exports = router;

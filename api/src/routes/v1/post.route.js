@@ -10,18 +10,23 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('createCategory'), validate(postValidation.createPost), postController.createPost)
-  .get( postController.getPosts);
+  .post(auth('createPost'), validate(postValidation.createPost), postController.createPost)
+  .get(auth('getPosts'), validate(postValidation.getPosts), postController.getPosts);
 
 router
   .route('/:postId')
-  .get(auth('getCategory'),validate(postValidation.getPost), postController.getPost)
-  .patch(auth('manageCategory'), validate(postValidation.updatePost), postController.updatePost)
-  .delete(auth('manageCategory'),validate(postValidation.deletePost), postController.deletePost)
+  .get(auth('getPost'),validate(postValidation.getPost), postController.getPost)
+  .patch(auth('managePosts'), validate(postValidation.updatePost), postController.updatePost)
+  .delete(auth('managePosts'),validate(postValidation.deletePost), postController.deletePost)
 
 router
-  .route('/webPosts')
+  .route('/public/webPosts')
   .get(postController.getPosts)
+
+router
+  .route('/public/single/:postId')
+  .get(postController.getPost)
+
 
 module.exports = router;
 

@@ -7,6 +7,7 @@ import { BiChevronsRight } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { axiosAuth, axiosAuthUpload } from '../config/axios';
+import axios from 'axios';
 
 const EditPost = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const EditPost = () => {
     desc: '', 
     category: '', 
     image: ''});
+    
 
   const onUpload = (files) => {
     const formData = new FormData();
@@ -26,7 +28,7 @@ const EditPost = () => {
       'https://api.cloudinary.com/v1_1/dttk6eaz9/image/upload', 
       formData)
       .then((response) => {
-        setImage(response.data.secure_url)
+        setPost({...post, image: response.data.secure_url})
       })
   }
 
@@ -55,8 +57,8 @@ const EditPost = () => {
       const url = `http://localhost:5000/v1/posts/${id}`
       const res = await (await axiosAuthUpload.patch(url, post, {})).data;
       navigate('/admin/posts');
-     } catch (e) {
-      console.log(e)
+     } catch (error) {
+      console.log(error)
      }
   }
 
@@ -74,6 +76,7 @@ const EditPost = () => {
         </div>
       </div>
       <div className='product-form-wrapper'>
+        
         <form className='product-form'  onSubmit={(e) => handleSubmite(e)}>
 
             <div className='product-form-control'>
@@ -104,7 +107,7 @@ const EditPost = () => {
 
             <div className='product-form-control'>
                 <label className='username'>Categories</label>
-                <select name="options" value={post?.category} onChange={(e) => setPost({...post, category: e.target.value})} required>
+                <select name="options" value={post?.category.id} onChange={(e) => setPost({...post, category: e.target.value})} required>
                   <option value="">Choose an Option</option>
                   {
                    categories?.results?.map((data, i) => (
@@ -116,15 +119,15 @@ const EditPost = () => {
 
             <div className='product-form-control'>
                 <label className='username'>Description</label>
-                <ReactQuill theme="snow" className='quill' value={post?.desc} required/>
+                <ReactQuill theme="snow" className='quill' value={post?.desc} onChange={(e) => setPost({...post, desc: e})} required/>
             </div>
 
             <div className='product-btn-control'>
               <a href="/admin/posts">Back To</a>
               <button type='submit' className='new-product-btn' onSubmit={(e) => onSave(e)}>Update Post</button>
             </div>
-        
         </form>
+        
     </div>
     </div>
   )

@@ -19,7 +19,8 @@ const getPosts = {
     desc: Joi.string(),
     category: Joi.string(),
     page: Joi.number(),
-    limit: Joi.number()
+    limit: Joi.number(),
+    sortBy: Joi.string()
   }),
 };
 

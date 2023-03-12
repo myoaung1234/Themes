@@ -10,7 +10,6 @@ import axios  from 'axios';
 
 const AddNew = () => {
   const navigate = useNavigate();
-
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(null);
   const [summary, setSummary] = useState('');
@@ -51,6 +50,7 @@ const AddNew = () => {
       desc: desc , 
       category: category 
     }
+    console.log(Credentials)
     e.preventDefault();
     try {
       setLoading(false)
